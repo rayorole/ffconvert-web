@@ -15,8 +15,8 @@ import { FileInputIcon } from "lucide-react";
 export default function Navbar() {
   return (
     <header className="px-4 lg:px-6 h-14 flex items-center">
-      <Link className="flex items-center justify-center" href="#">
-        <span className="sr-only">ConvertEase</span>
+      <Link className="flex items-center justify-center" href="/">
+        <span className="sr-only">ffconvert</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
