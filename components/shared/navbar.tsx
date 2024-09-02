@@ -33,10 +33,10 @@ export default function Navbar() {
 
         <h1 className="ml-2 text-lg font-bold tracking-tight">ffconvert</h1>
       </Link>
-      <nav className="ml-auto flex gap-4 sm:gap-6">
+      <nav className="ml-auto flex items-center gap-4 sm:gap-6">
         <Link
           className="text-sm font-medium hover:underline underline-offset-4"
-          href="/convert"
+          href="/"
         >
           Convert
         </Link>
@@ -52,12 +52,23 @@ export default function Navbar() {
         >
           About
         </Link>
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="/contact"
-        >
-          Contact
-        </Link>
+        <div className="flex items-center space-x-2 border-l pl-2">
+          <Button
+            asChild
+            size="sm"
+            variant="ghost"
+            className="rounded-full lg:px-4"
+          >
+            <Link className="text-sm font-medium" href="/signin">
+              Sign In
+            </Link>
+          </Button>
+          <Button asChild size="sm" className="rounded-full lg:px-4">
+            <Link className="text-sm font-medium" href="/signup">
+              Sign Up
+            </Link>
+          </Button>
+        </div>
       </nav>
     </header>
   );
