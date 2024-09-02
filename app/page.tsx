@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,8 +22,6 @@ import {
   FilmIcon,
 } from "lucide-react";
 
-import Navbar from "@/components/shared/navbar";
-import Footer from "@/components/shared/footer";
 
 export default function Home() {
   return (
