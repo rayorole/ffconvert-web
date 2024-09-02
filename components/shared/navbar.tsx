@@ -1,64 +1,64 @@
-import React from 'react'
+import React from "react";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuContent
-} from "@/components/ui/navigation-menu"
-import Image from 'next/image'
-import { Button } from '@/components/ui/button'
+  NavigationMenuContent,
+} from "@/components/ui/navigation-menu";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { FileInputIcon } from "lucide-react";
 
 export default function Navbar() {
   return (
-    <div className="sticky top-0 z-50 w-full border-b bg-background/95 p-2 backdrop-blur dark:border-zinc-800">
-      <div className="container flex justify-between items-center">
-        {/* Logo Section */}
-        <div className="flex items-center">
-          <Image src="/vercel.svg" alt="logo" width={60} height={60} />
-        </div>
-        
-        {/* Navigation Menu */}
-        <div className="flex justify-center flex-1 ">
-          <NavigationMenu>
-            <NavigationMenuList className="space-x-5">
-              {/* Converter Menu Item with Dropdown */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>
-                  Converter
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="bg-white shadow-md rounded-md p-4 space-y-2 dark:bg-zinc-800">
-                    <li>
-                      <NavigationMenuLink href="/converter/audio" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-zinc-700">
-                        Audio Converter
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink href="/converter/video" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-zinc-700">
-                        Video Converter
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink href="/converter/image" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-zinc-700">
-                        Image Converter
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
+    <header className="px-4 lg:px-6 h-14 flex items-center">
+      <Link className="flex items-center justify-center" href="#">
+        <span className="sr-only">ConvertEase</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-6 w-6"
+        >
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+          <polyline points="14 2 14 8 20 8" />
+        </svg>
 
-              {/* Pricing Menu Item */}
-              <NavigationMenuItem>
-                <NavigationMenuLink href="/pricing">
-                  Pricing
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-      </div>
-    </div>
-  )
+        <h1 className="ml-2 text-lg font-bold tracking-tight">ffconvert</h1>
+      </Link>
+      <nav className="ml-auto flex gap-4 sm:gap-6">
+        <Link
+          className="text-sm font-medium hover:underline underline-offset-4"
+          href="/convert"
+        >
+          Convert
+        </Link>
+        <Link
+          className="text-sm font-medium hover:underline underline-offset-4"
+          href="/pricing"
+        >
+          Pricing
+        </Link>
+        <Link
+          className="text-sm font-medium hover:underline underline-offset-4"
+          href="/about"
+        >
+          About
+        </Link>
+        <Link
+          className="text-sm font-medium hover:underline underline-offset-4"
+          href="/contact"
+        >
+          Contact
+        </Link>
+      </nav>
+    </header>
+  );
 }
