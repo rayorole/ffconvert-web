@@ -30,7 +30,7 @@ model oauthAccountUser {
   provider           String
   providerAccountId  String
   refreshToken       String?
-  accessToken        String?
+  accessToken        String?   @db.Text
   accessTokenExpires DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
