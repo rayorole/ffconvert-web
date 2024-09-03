@@ -56,7 +56,7 @@ export default function Wrapper({
           collapsedSize={navCollapsedSize}
           collapsible={true}
           minSize={12}
-          maxSize={15}
+          maxSize={20}
           onCollapse={() => {
             setIsCollapsed(true);
             document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(

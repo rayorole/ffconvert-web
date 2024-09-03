@@ -95,6 +95,7 @@ export const GET = async (req: NextRequest) => {
           email: googleData.email,
           name: googleData.name,
           image: googleData.picture,
+          emailVerified: googleData.verified_email,
         },
       });
 
@@ -161,8 +162,10 @@ export const GET = async (req: NextRequest) => {
       sessionCookie.attributes
     );
 
+    console.log(new URL("/", process.env.NEXT_PUBLIC_BASE_URL).href);
+
     return NextResponse.redirect(
-      new URL("/", process.env.NEXT_PUBLIC_BASE_URL).toString(),
+      new URL("/", process.env.NEXT_PUBLIC_BASE_URL).href,
       302
     );
   } catch (error) {

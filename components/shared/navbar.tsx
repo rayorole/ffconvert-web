@@ -13,9 +13,10 @@ import Link from "next/link";
 import { FileInputIcon } from "lucide-react";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
+import { getSessionId } from "@/app/actions/auth";
 
 export default async function Navbar() {
-  const sessionId = cookies().get(lucia.sessionCookieName)?.value;
+  const sessionId = await getSessionId();
   let loggedIn = false;
   if (sessionId) {
     const { user, session } = await lucia.validateSession(sessionId);

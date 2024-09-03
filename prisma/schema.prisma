@@ -14,17 +14,27 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  sessions  Session[]
-  email     String    @unique
-  name      String?
-  image     String?
-  createdAt DateTime  @default(now())
+  id            String    @id @default(cuid())
+  sessions      Session[]
+  email         String    @unique
+  passwordHash  String?
+  emailVerified Boolean   @default(false)
+  name          String?
+  image         String?
+  createdAt     DateTime  @default(now())
 
-  oauthAccountUsers oauthAccountUser[]
+  oauthAccountUsers OauthAccountUser[]
 }
 
-model oauthAccountUser {
+model EmailVerificationCode {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiredAt DateTime
+  userId    String   @unique
+}
+
+model OauthAccountUser {
   id                 String    @id @default(cuid())
   userId             String
   provider           String

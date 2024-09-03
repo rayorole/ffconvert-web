@@ -4,7 +4,9 @@ import React from "react";
 import UserMenu from "@/components/shared/dash-navbar-menu";
 import { Button } from "@/components/ui/button";
 import { BellDotIcon, LinkIcon } from "lucide-react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { getSessionId } from "../actions/auth";
+import { lucia } from "@/lib/auth";
 
 export default async function Layout({
   children,
@@ -16,6 +18,14 @@ export default async function Layout({
 
   const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
   const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
+
+  const sessionId = await getSessionId();
+
+  const { user, session } = await lucia.validateSession(sessionId!);
+
+  if (!user?.emailVerified) {
+    redirect("/signup/verification");
+  }
 
   return (
     <Wrapper
@@ -29,7 +39,7 @@ export default async function Layout({
           <Button variant="outline" size="icon" className="h-9 w-9">
             <BellDotIcon size={16} />
           </Button>
-          <UserMenu />
+          <UserMenu user={user} />
         </div>
       </div>
       <main className="p-3 md:p-5 lg:p-8">{children}</main>

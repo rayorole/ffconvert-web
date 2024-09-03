@@ -25,19 +25,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { getSessionId, invalidateSession } from "@/app/actions/auth";
+import { lucia } from "@/lib/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { User } from "lucia";
 
-export default function UserMenu() {
+export default function UserMenu({ user }: { user: User }) {
   const router = useRouter();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          image
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <Avatar>
+            <AvatarImage src={user?.image} alt="Avatar" />
+            <AvatarFallback>{user?.email[0].toUpperCase()}</AvatarFallback>
+          </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <div className="w-full h-24 text-center bg-blue-500/10 rounded flex items-center justify-center font-medium">
+        <div className="w-full h-24 text-center bg-primary/10 rounded flex items-center justify-center font-medium text-primary">
           Free plan
         </div>
 
@@ -77,7 +84,12 @@ export default function UserMenu() {
           <span>Homepage</span>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={async () => {
+            await invalidateSession();
+            router.push("/");
+          }}
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
