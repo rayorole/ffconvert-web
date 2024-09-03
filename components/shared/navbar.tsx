@@ -11,8 +11,19 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { FileInputIcon } from "lucide-react";
+import { lucia } from "@/lib/auth";
+import { cookies } from "next/headers";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const sessionId = cookies().get(lucia.sessionCookieName)?.value;
+  let loggedIn = false;
+  if (sessionId) {
+    const { user, session } = await lucia.validateSession(sessionId);
+    if (user) {
+      loggedIn = true;
+    }
+  }
+
   return (
     <header className="px-4 lg:px-6 h-14 flex items-center">
       <Link className="flex items-center justify-center" href="/">
@@ -48,26 +59,36 @@ export default function Navbar() {
         </Link>
         <Link
           className="text-sm font-medium hover:underline underline-offset-4"
-          href="/about"
+          href="/developers"
         >
-          About
+          Developers
         </Link>
         <div className="flex items-center space-x-2 border-l pl-2">
-          <Button
-            asChild
-            size="sm"
-            variant="ghost"
-            className="rounded-full lg:px-4"
-          >
-            <Link className="text-sm font-medium" href="/signin">
-              Sign In
-            </Link>
-          </Button>
-          <Button asChild size="sm" className="rounded-full lg:px-4">
-            <Link className="text-sm font-medium" href="/signup">
-              Sign Up
-            </Link>
-          </Button>
+          {loggedIn ? (
+            <Button asChild size="sm" className="rounded-full lg:px-4">
+              <Link className="text-sm font-medium" href="/dashboard">
+                Dashboard
+              </Link>
+            </Button>
+          ) : (
+            <>
+              <Button
+                asChild
+                size="sm"
+                variant="ghost"
+                className="rounded-full lg:px-4"
+              >
+                <Link className="text-sm font-medium" href="/signin">
+                  Sign In
+                </Link>
+              </Button>
+              <Button asChild size="sm" className="rounded-full lg:px-4">
+                <Link className="text-sm font-medium" href="/signup">
+                  Sign Up
+                </Link>
+              </Button>
+            </>
+          )}
         </div>
       </nav>
     </header>

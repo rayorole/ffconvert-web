@@ -1,9 +1,11 @@
 # Development
 
 - Signup and login pages [DONE]
-- Setup MySQL database
-- Setup Prisma ORM
-- Authentication? Lucia or NextAuth.js?
+- Google OAuth [DONE]
+- Setup MySQL database [DONE]
+- Setup Prisma ORM [DONE]
+- Authentication? Lucia or NextAuth.js? [DONE]
+- Make /dashboard page to manage conversion history, api keys, settings
 - Stripe integration for Premium subscription
 - Setup ffmpeg backend with Docker
 

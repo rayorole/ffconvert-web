@@ -14,8 +14,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FileIcon, LockIcon, MailIcon, UserIcon } from "lucide-react";
+import Image from "next/image";
+import { createAuthorizationUrl } from "../actions/auth";
 
 export default function SignupPage() {
+  async function signupGoogle() {
+    const res = await createAuthorizationUrl();
+    if (res.error) {
+      console.error(res.error);
+      return;
+    }
+
+    console.log(res.data);
+    window.location.href = res.data!.toString();
+  }
+
   return (
     <main className="flex-1 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
@@ -26,6 +39,25 @@ export default function SignupPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <Button
+            variant="outline"
+            className="w-full space-x-2"
+            onClick={signupGoogle}
+          >
+            <Image
+              src="/google.png"
+              alt="Google"
+              className="w-5 h-5"
+              width={20}
+              height={20}
+            />
+            <span>Sign up with Google</span>
+          </Button>
+          <div className="flex items-center space-x-2">
+            <div className="flex-1 border-t border-gray-200"></div>
+            <div className="text-sm text-gray-500">Or continue with email</div>
+            <div className="flex-1 border-t border-gray-200"></div>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="name">Full Name</Label>
             <div className="relative">
