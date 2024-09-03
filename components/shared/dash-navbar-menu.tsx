@@ -87,7 +87,7 @@ export default function UserMenu({ user }: { user: User }) {
         <DropdownMenuItem
           onClick={async () => {
             await invalidateSession();
-            router.push("/");
+            window.location.replace("/");
           }}
         >
           <LogOut className="mr-2 h-4 w-4" />

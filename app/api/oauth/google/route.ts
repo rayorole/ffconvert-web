@@ -165,7 +165,7 @@ export const GET = async (req: NextRequest) => {
     console.log(new URL("/", process.env.NEXT_PUBLIC_BASE_URL).href);
 
     return NextResponse.redirect(
-      new URL("/", process.env.NEXT_PUBLIC_BASE_URL).href,
+      new URL("/", process.env.NEXT_PUBLIC_BASE_URL),
       302
     );
   } catch (error) {
