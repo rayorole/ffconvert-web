@@ -1,4 +1,5 @@
 
+import Code from "@/components/shared/code";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,7 +17,29 @@ import {
 
 } from "lucide-react";
 
+
+
 export default function DevelopersPage() {
+
+const code = `const ffconvert = require('ffconvert');
+
+const converter = new ffconvert('YOUR_API_KEY');
+
+converter.convert({
+  inputFile: 'path/to/input.docx',
+  outputFormat: 'pdf',
+  options: {
+    quality: 'high',
+    pageSize: 'A4'
+  }
+})
+.then(result => {
+  console.log('Conversion successful:', result.outputFile);
+})
+.catch(error => {
+  console.error('Conversion failed:', error);
+});`
+
   return (
     <main className="flex-1 py-12 md:py-24 lg:py-32">
       <div className="container max-w-screen-xl mx-auto px-4 md:px-6">
@@ -107,28 +130,7 @@ export default function DevelopersPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto">
-                <code className="text-sm font-medium">
-                  {`const ffconvert = require('ffconvert');
-
-const converter = new ffconvert('YOUR_API_KEY');
-
-converter.convert({
-  inputFile: 'path/to/input.docx',
-  outputFormat: 'pdf',
-  options: {
-    quality: 'high',
-    pageSize: 'A4'
-  }
-})
-.then(result => {
-  console.log('Conversion successful:', result.outputFile);
-})
-.catch(error => {
-  console.error('Conversion failed:', error);
-});`}
-                </code>
-              </pre>
+              <Code code={code} lang="javascript" theme="github-light-default" />
             </CardContent>
           </Card>
         </div>
