@@ -34,7 +34,7 @@ export default async function Layout({
       navCollapsedSize={2}
     >
       <div className="h-14 w-full border-b flex items-center justify-between px-4">
-        <h1 className="text-xl font-bold">Dashboard</h1>
+        <h1 className="text-xl font-bold">Statistics</h1>
         <div className="gap-2 flex items-center">
           <Button variant="outline" size="icon" className="h-9 w-9">
             <BellDotIcon size={16} />
