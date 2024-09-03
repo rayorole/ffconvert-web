@@ -122,46 +122,6 @@ converter.convert({
               </Card>
             </div>
             <Card className="mt-8">
-              <CardHeader>
-                <CardTitle>Code Example</CardTitle>
-                <CardDescription>
-                  Here's a quick example of how to use our Node.js library to
-                  convert a file:
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                We use API keys to ensure secure access to our services. Your
-                data and conversions are protected with industry-standard
-                encryption.
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <SettingsIcon className="w-6 h-6 mr-2" />
-                  Custom Settings
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                Tailor the conversion process to your needs with custom settings
-                for each file type, allowing for precise control over the
-                output.
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <CodeIcon className="w-6 h-6 mr-2" />
-                  Node.js Library
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                Our Node.js library simplifies integration, allowing you to
-                convert files with just a few lines of code.
-              </CardContent>
-            </Card>
-          </div>
-          <Card className="mt-8">
             <CardHeader>
               <CardTitle>Code Example</CardTitle>
               <CardDescription>
@@ -169,10 +129,11 @@ converter.convert({
                 convert a file:
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="border-t pt-4">
               <Code code={code} lang="javascript" theme="github-light-default" />
             </CardContent>
           </Card>
+          </div>
         </div>
       </main>
       <Footer />
