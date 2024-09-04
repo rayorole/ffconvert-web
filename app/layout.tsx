@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/shared/navbar";
-import Footer from "@/components/shared/footer";
+import { GeistSans } from "geist/font/sans"; // import font
 import { Toaster } from "sonner";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ffconvert",
@@ -19,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={GeistSans.className}>
         <div className="flex flex-col min-h-screen">{children}</div>
         <Toaster />
       </body>

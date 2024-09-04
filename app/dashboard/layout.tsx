@@ -28,21 +28,25 @@ export default async function Layout({
   }
 
   return (
-    <Wrapper
-      defaultCollapsed={defaultCollapsed}
-      defaultLayout={defaultLayout}
-      navCollapsedSize={2}
-    >
-      <div className="h-14 w-full border-b flex items-center justify-between px-4">
-        <h1 className="text-xl font-bold">Statistics</h1>
-        <div className="gap-2 flex items-center">
-          <Button variant="outline" size="icon" className="h-9 w-9">
-            <BellDotIcon size={16} />
-          </Button>
-          <UserMenu user={user} />
+    <div className="overflow-hidden h-screen">
+      <Wrapper
+        defaultCollapsed={defaultCollapsed}
+        defaultLayout={defaultLayout}
+        navCollapsedSize={2}
+      >
+        <div className="h-14 w-full border-b flex items-center justify-between px-4">
+          <h1 className="text-xl font-bold">Statistics</h1>
+          <div className="gap-2 flex items-center">
+            <Button variant="outline" size="icon" className="h-9 w-9">
+              <BellDotIcon size={16} />
+            </Button>
+            <UserMenu user={user} />
+          </div>
         </div>
-      </div>
-      <main className="p-3 md:p-5 lg:p-8">{children}</main>
-    </Wrapper>
+        <main className="p-3 md:p-5 lg:p-8 overflow-scroll h-screen">
+          <div className="container mx-auto">{children}</div>
+        </main>
+      </Wrapper>
+    </div>
   );
 }
