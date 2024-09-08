@@ -18,7 +18,15 @@ import { FileImageIcon, Trash2Icon } from "lucide-react";
 import { readableFileSize } from "@/lib/file";
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -34,6 +42,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 const frameworks = [
   {
@@ -73,6 +84,29 @@ export default function ConvertComponent() {
     setUploadedFiles(files);
     setConverting(true);
     console.log(files);
+  }
+
+  async function handleFileConversion() {
+    const formData = new FormData();
+
+    formData.append("files", uploadedFiles![0]);
+    formData.append("outputFormat", value);
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_FFCONVERT_BACKEND_URL}/convert`,
+      {
+        method: "POST",
+        body: formData,
+        mode: "no-cors",
+      }
+    );
+
+    if (!response.ok) {
+      console.log("Error");
+    }
+
+    const data = await response.json();
+    console.log(data);
   }
 
   return (
@@ -133,11 +167,7 @@ export default function ConvertComponent() {
                                     key={framework.value}
                                     value={framework.value}
                                     onSelect={(currentValue) => {
-                                      setValue(
-                                        currentValue === value
-                                          ? ""
-                                          : currentValue
-                                      );
+                                      setValue(currentValue);
                                       setOpen(false);
                                     }}
                                   >
