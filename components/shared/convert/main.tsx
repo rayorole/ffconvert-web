@@ -42,71 +42,84 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { fileTypes } from "@/lib/conversion";
 
-const frameworks = [
-  {
-    value: "mp4",
-    label: "MP4",
-  },
-  {
-    value: "png",
-    label: "PNG",
-  },
-  {
-    value: "jpg",
-    label: "JPG",
-  },
-  {
-    value: "mkv",
-    label: "MKV",
-  },
-  {
-    value: "gif",
-    label: "GIF",
-  },
-  {
-    value: "webm",
-    label: "WEBM",
-  },
-];
+type ConvertFormValues = {
+  file: File;
+  outputFormat: string;
+  open: boolean;
+  status: "ready" | "converting" | "done" | "error";
+};
 
 export default function ConvertComponent() {
-  const [uploadedFiles, setUploadedFiles] = useState<File[] | null>(null);
+  // const [uploadedFiles, setUploadedFiles] = useState<File[] | null>(null);
   const [converting, setConverting] = useState(false);
-
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [convertToFiles, setConvertToFiles] = useState<ConvertFormValues[]>([]);
 
   function handleFileUpload(files: File[]) {
-    setUploadedFiles(files);
-    setConverting(true);
-    console.log(files);
-  }
-
-  async function handleFileConversion() {
-    const formData = new FormData();
-
-    formData.append("files", uploadedFiles![0]);
-    formData.append("outputFormat", value);
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_FFCONVERT_BACKEND_URL}/convert`,
-      {
-        method: "POST",
-        body: formData,
-        mode: "no-cors",
-      }
-    );
-
-    if (!response.ok) {
-      console.log("Error");
+    for (const file of files) {
+      setConvertToFiles((prevFiles) => [
+        ...prevFiles,
+        { file, outputFormat: "", open: false, status: "ready" },
+      ]);
+      setConverting(true);
+      console.log(files);
     }
+  }
+  async function handleFileConversion() {
+    Promise.all(
+      convertToFiles.map(async (file) => {
+        setConvertToFiles((prevFiles) =>
+          prevFiles.map((prevFile) => {
+            if (prevFile.file === file.file) {
+              return {
+                ...prevFile,
+                status: "converting",
+              };
+            }
+            return prevFile;
+          })
+        );
 
-    const data = await response.json();
-    console.log(data);
+        const formData = new FormData();
+        formData.append("file", file.file);
+        formData.append("outputFormat", file.outputFormat);
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_FFCONVERT_BACKEND_URL}/convert`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          console.log("Error");
+
+          // Get message from body
+          const data = await response.json();
+          console.log(data);
+
+          return;
+        }
+
+        const data = await response.json();
+
+        setConvertToFiles((prevFiles) =>
+          prevFiles.map((prevFile) => {
+            if (prevFile.file === file.file) {
+              return {
+                ...prevFile,
+                status: "done",
+              };
+            }
+            return prevFile;
+          })
+        );
+
+        console.log(data);
+      })
+    );
   }
 
   return (
@@ -125,100 +138,138 @@ export default function ConvertComponent() {
           installation required.
         </p>
       </div>
-      <div className="w-full max-w-md lg:max-w-xl space-y-2">
+      <div className="w-full max-w-md lg:max-w-screen-md space-y-2">
         {converting ? (
           <>
             <Table>
               <TableCaption>Ready when you are 💫</TableCaption>
               <TableBody>
-                {uploadedFiles?.map((file, i) => (
-                  <TableRow key={i} className="hover:bg-transparent">
-                    <TableCell className="font-medium hover:bg-muted/20 bg-muted/20 text-secondary-foreground">
-                      <div className="flex items-center space-x-1">
-                        <FileImageIcon className="h-5 w-5 mr-2" />
-                        <span>{file.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hover:bg-muted/20 bg-muted/20">
-                      <Popover open={open} onOpenChange={setOpen}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={open}
-                            className="w-[100px] justify-between"
-                          >
-                            {value
-                              ? frameworks.find(
-                                  (framework) => framework.value === value
-                                )?.label
-                              : "To ..."}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search file type..." />
-                            <CommandList>
-                              <CommandEmpty>No file type found.</CommandEmpty>
-                              <CommandGroup>
-                                {frameworks.map((framework) => (
-                                  <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
-                                    onSelect={(currentValue) => {
-                                      setValue(currentValue);
-                                      setOpen(false);
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mr-2 h-4 w-4",
-                                        value === framework.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      )}
-                                    />
-                                    {framework.label}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </TableCell>
-                    <TableCell className="hover:bg-muted/20 bg-muted/20">
-                      <Badge variant="warning">Ready</Badge>
-                    </TableCell>
-                    <TableCell className="hover:bg-muted/20 bg-muted/20 text-xs font-medium text-muted-foreground">
-                      {readableFileSize(file.size)}
-                    </TableCell>
-                    <TableCell className="text-right hover:bg-muted/20 bg-muted/20">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => {
-                          // Remove this file from the list
-                          setUploadedFiles((prevFiles) =>
-                            prevFiles!.filter((_, index) => index !== i)
-                          );
+                {convertToFiles
+                  .filter((file) => file.file)
+                  .map((file, i) => (
+                    <TableRow key={i} className="hover:bg-transparent">
+                      <TableCell className="font-medium hover:bg-muted/20 bg-muted/20 text-secondary-foreground">
+                        <div className="flex items-center space-x-1">
+                          <FileImageIcon className="h-5 w-5 mr-2" />
+                          <span>{file.file.name}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="hover:bg-muted/20 bg-muted/20">
+                        <Popover
+                          open={file.open}
+                          onOpenChange={(isOpen) => {
+                            setConvertToFiles((prevFiles) =>
+                              prevFiles.map((prevFile, index) => {
+                                if (index === i) {
+                                  return {
+                                    ...prevFile,
+                                    open: isOpen,
+                                  };
+                                }
+                                return prevFile;
+                              })
+                            );
+                          }}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="w-[100px] justify-between"
+                            >
+                              {file.outputFormat
+                                ? fileTypes.find(
+                                    (type) => type.value === file.outputFormat
+                                  )?.label
+                                : "To..."}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                              <CommandInput placeholder="Search file type..." />
+                              <CommandList>
+                                <CommandEmpty>No file type found.</CommandEmpty>
+                                <CommandGroup>
+                                  {fileTypes.map((type) => (
+                                    <CommandItem
+                                      key={type.value}
+                                      value={type.value}
+                                      onSelect={(currentValue) => {
+                                        setConvertToFiles((prevFiles) =>
+                                          prevFiles.map((prevFile, index) => {
+                                            if (index === i) {
+                                              return {
+                                                ...prevFile,
+                                                outputFormat: currentValue,
+                                                open: false,
+                                              };
+                                            }
+                                            return prevFile;
+                                          })
+                                        );
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          file.outputFormat === type.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                      {type.label}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </TableCell>
+                      <TableCell className="hover:bg-muted/20 bg-muted/20">
+                        {file.status === "converting" ? (
+                          <Badge variant="default">Converting</Badge>
+                        ) : file.status === "done" ? (
+                          <Badge variant="success">Done</Badge>
+                        ) : file.status === "error" ? (
+                          <Badge variant="error">Error</Badge>
+                        ) : (
+                          <Badge variant="warning">Ready</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="hover:bg-muted/20 bg-muted/20 text-xs font-medium">
+                        {readableFileSize(file.file.size)}
+                      </TableCell>
+                      <TableCell className="text-right hover:bg-muted/20 bg-muted/20">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => {
+                            // Remove this file from the list
+                            setConvertToFiles((prevFiles) =>
+                              prevFiles.filter((_, index) => index !== i)
+                            );
 
-                          // If no files left, stop converting
-                          if (uploadedFiles!.length === 1) {
-                            setConverting(false);
-                          }
-                        }}
-                      >
-                        <Trash2Icon className="h-5 w-5 text-muted-foreground hover:text-primary" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                            // If no files left, stop converting
+                            if (convertToFiles.length === 1) {
+                              setConverting(false);
+                            }
+                          }}
+                        >
+                          <Trash2Icon className="h-5 w-5 text-muted-foreground hover:text-primary" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
 
-            <Button type="submit" variant="ringHover" className="flex-1 w-full">
+            <Button
+              variant="ringHover"
+              className="flex-1 w-full"
+              onClick={handleFileConversion}
+            >
               Convert files
             </Button>
           </>
@@ -235,7 +286,7 @@ export default function ConvertComponent() {
                   <div className="flex items-center justify-center w-full border border-dashed rounded hover:border-solid hover:bg-muted/40">
                     <FileUploaderZone
                       filesToParent={handleFileUpload}
-                      files={uploadedFiles}
+                      files={convertToFiles.map((file) => file.file)}
                     />
                   </div>
                 </div>

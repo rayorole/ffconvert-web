@@ -98,7 +98,7 @@ export default function Wrapper({
                 icon: Key,
                 title: "API keys",
                 variant: "ghost",
-                href: `/dashboard/api`,
+                href: `/dashboard/keys`,
               },
               {
                 icon: Settings,
