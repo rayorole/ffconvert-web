@@ -11,6 +11,7 @@ import {
 import { CheckIcon, XIcon } from "lucide-react";
 import Navbar from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
+import PremiumButton from "@/components/pricing/premiumbutton";
 
 export default function page() {
   return (
@@ -106,7 +107,7 @@ export default function page() {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full">Upgrade to Premium</Button>
+                  <PremiumButton priceId="price_1PwsyFGtqCRaa5X7WOlUx60l" />
                 </CardFooter>
               </Card>
             </div>

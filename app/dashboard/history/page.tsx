@@ -1,8 +1,8 @@
-"use client"
-import { useState } from 'react'
-import { CalendarIcon,  FileIcon, DownloadIcon } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+"use client";
+import { useState } from "react";
+import { CalendarIcon, FileIcon, DownloadIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -10,28 +10,29 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Calendar } from "@/components/ui/calendar"
+} from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+} from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DateRange } from "react-day-picker";
 
 // TypeScript interface for conversion data
 interface ConversionType {
@@ -46,45 +47,93 @@ interface ConversionType {
 
 // Mock data for demonstration
 const mockConversions: ConversionType[] = [
-  { id: 1, fileName: 'video1.mp4', conversionType: 'MP4 to AVI', startTime: '2023-06-01 10:00:00', duration: '00:05:23', status: 'Completed', fileSize: '250 MB' },
-  { id: 2, fileName: 'audio1.wav', conversionType: 'WAV to MP3', startTime: '2023-06-02 14:30:00', duration: '00:01:45', status: 'Completed', fileSize: '45 MB' },
-  { id: 3, fileName: 'video2.mov', conversionType: 'MOV to MP4', startTime: '2023-06-03 09:15:00', duration: '00:08:12', status: 'Failed', fileSize: '500 MB' },
-  { id: 4, fileName: 'audio2.flac', conversionType: 'FLAC to AAC', startTime: '2023-06-04 16:45:00', duration: '00:03:30', status: 'In Progress', fileSize: '80 MB' },
-  { id: 5, fileName: 'video3.avi', conversionType: 'AVI to WebM', startTime: '2023-06-05 11:20:00', duration: '00:06:55', status: 'Completed', fileSize: '320 MB' },
-]
+  {
+    id: 1,
+    fileName: "video1.mp4",
+    conversionType: "MP4 to AVI",
+    startTime: "2023-06-01 10:00:00",
+    duration: "00:05:23",
+    status: "Completed",
+    fileSize: "250 MB",
+  },
+  {
+    id: 2,
+    fileName: "audio1.wav",
+    conversionType: "WAV to MP3",
+    startTime: "2023-06-02 14:30:00",
+    duration: "00:01:45",
+    status: "Completed",
+    fileSize: "45 MB",
+  },
+  {
+    id: 3,
+    fileName: "video2.mov",
+    conversionType: "MOV to MP4",
+    startTime: "2023-06-03 09:15:00",
+    duration: "00:08:12",
+    status: "Failed",
+    fileSize: "500 MB",
+  },
+  {
+    id: 4,
+    fileName: "audio2.flac",
+    conversionType: "FLAC to AAC",
+    startTime: "2023-06-04 16:45:00",
+    duration: "00:03:30",
+    status: "In Progress",
+    fileSize: "80 MB",
+  },
+  {
+    id: 5,
+    fileName: "video3.avi",
+    conversionType: "AVI to WebM",
+    startTime: "2023-06-05 11:20:00",
+    duration: "00:06:55",
+    status: "Completed",
+    fileSize: "320 MB",
+  },
+];
 
 export default function EnhancedConversionHistory() {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('All')
-  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
-  const [currentPage, setCurrentPage] = useState(1)
-  const [selectedConversion, setSelectedConversion] = useState<ConversionType | null>(null)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [dateRange, setDateRange] = useState<DateRange>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedConversion, setSelectedConversion] =
+    useState<ConversionType | null>(null);
 
-  const itemsPerPage = 5
-  const totalPages = Math.ceil(mockConversions.length / itemsPerPage)
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(mockConversions.length / itemsPerPage);
 
-  const filteredConversions = mockConversions.filter(conversion => 
-    conversion.fileName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (statusFilter === 'All' || conversion.status === statusFilter) &&
-    (!dateRange.from || new Date(conversion.startTime) >= dateRange.from) &&
-    (!dateRange.to || new Date(conversion.startTime) <= dateRange.to)
-  )
+  const filteredConversions = mockConversions.filter(
+    (conversion) =>
+      conversion.fileName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (statusFilter === "All" || conversion.status === statusFilter) &&
+      (!dateRange.from || new Date(conversion.startTime) >= dateRange.from) &&
+      (!dateRange.to || new Date(conversion.startTime) <= dateRange.to)
+  );
 
   const paginatedConversions = filteredConversions.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
-  )
+  );
 
-  const totalConversions = mockConversions.length
-  const completedConversions = mockConversions.filter(c => c.status === 'Completed').length
-  const failedConversions = mockConversions.filter(c => c.status === 'Failed').length
+  const totalConversions = mockConversions.length;
+  const completedConversions = mockConversions.filter(
+    (c) => c.status === "Completed"
+  ).length;
+  const failedConversions = mockConversions.filter(
+    (c) => c.status === "Failed"
+  ).length;
 
   return (
     <div className={`container mx-auto py-10 `}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Conversions</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Conversions
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalConversions}</div>
@@ -92,18 +141,26 @@ export default function EnhancedConversionHistory() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completed Conversions</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Completed Conversions
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{completedConversions}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {completedConversions}
+            </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Failed Conversions</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Failed Conversions
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{failedConversions}</div>
+            <div className="text-2xl font-bold text-red-600">
+              {failedConversions}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -131,12 +188,16 @@ export default function EnhancedConversionHistory() {
         </div>
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="w-[280px] justify-start text-left font-normal">
+            <Button
+              variant="outline"
+              className="w-[280px] justify-start text-left font-normal"
+            >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {dateRange.from ? (
                 dateRange.to ? (
                   <>
-                    {dateRange.from.toDateString()} - {dateRange.to.toDateString()}
+                    {dateRange.from.toDateString()} -{" "}
+                    {dateRange.to.toDateString()}
                   </>
                 ) : (
                   dateRange.from.toDateString()
@@ -178,10 +239,16 @@ export default function EnhancedConversionHistory() {
               <TableCell>{conversion.startTime}</TableCell>
               <TableCell>{conversion.duration}</TableCell>
               <TableCell>
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold
-                  ${conversion.status === 'Completed' ? 'bg-green-100 text-green-800' : 
-                    conversion.status === 'In Progress' ? 'bg-blue-100 text-blue-800' : 
-                    'bg-red-100 text-red-800'}`}>
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-semibold
+                  ${
+                    conversion.status === "Completed"
+                      ? "bg-green-100 text-green-800"
+                      : conversion.status === "In Progress"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
                   {conversion.status}
                 </span>
               </TableCell>
@@ -189,7 +256,11 @@ export default function EnhancedConversionHistory() {
                 <div className="flex space-x-2">
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline" size="sm" onClick={() => setSelectedConversion(conversion)}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedConversion(conversion)}
+                      >
                         <FileIcon className="h-4 w-4" />
                       </Button>
                     </DialogTrigger>
@@ -199,12 +270,29 @@ export default function EnhancedConversionHistory() {
                       </DialogHeader>
                       {selectedConversion && (
                         <div>
-                          <p><strong>File Name:</strong> {selectedConversion.fileName}</p>
-                          <p><strong>Conversion Type:</strong> {selectedConversion.conversionType}</p>
-                          <p><strong>Start Time:</strong> {selectedConversion.startTime}</p>
-                          <p><strong>Duration:</strong> {selectedConversion.duration}</p>
-                          <p><strong>Status:</strong> {selectedConversion.status}</p>
-                          <p><strong>File Size:</strong> {selectedConversion.fileSize}</p>
+                          <p>
+                            <strong>File Name:</strong>{" "}
+                            {selectedConversion.fileName}
+                          </p>
+                          <p>
+                            <strong>Conversion Type:</strong>{" "}
+                            {selectedConversion.conversionType}
+                          </p>
+                          <p>
+                            <strong>Start Time:</strong>{" "}
+                            {selectedConversion.startTime}
+                          </p>
+                          <p>
+                            <strong>Duration:</strong>{" "}
+                            {selectedConversion.duration}
+                          </p>
+                          <p>
+                            <strong>Status:</strong> {selectedConversion.status}
+                          </p>
+                          <p>
+                            <strong>File Size:</strong>{" "}
+                            {selectedConversion.fileSize}
+                          </p>
                         </div>
                       )}
                     </DialogContent>
@@ -230,12 +318,14 @@ export default function EnhancedConversionHistory() {
           Page {currentPage} of {totalPages}
         </span>
         <Button
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
           disabled={currentPage === totalPages}
         >
           Next
         </Button>
       </div>
     </div>
-  )
+  );
 }
