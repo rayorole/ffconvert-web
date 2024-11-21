@@ -146,7 +146,7 @@ export const GET = async (req: NextRequest) => {
         sessionCookie.attributes
       );
 
-      return NextResponse.redirect("/", 302);
+      return NextResponse.redirect(new URL('/', req.url))
     }
 
     // Create a session for existing user
@@ -164,10 +164,7 @@ export const GET = async (req: NextRequest) => {
 
     console.log(new URL("/", process.env.NEXT_PUBLIC_BASE_URL).href);
 
-    return NextResponse.redirect(
-      new URL("/", process.env.NEXT_PUBLIC_BASE_URL),
-      302
-    );
+    return NextResponse.redirect(new URL('/', req.url))
   } catch (error) {
     console.error(error);
     return NextResponse.json(
