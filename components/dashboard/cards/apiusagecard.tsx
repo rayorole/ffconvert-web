@@ -13,7 +13,7 @@ export function APIUsageCard({ usage }: APIUsageCardProps) {
             </CardHeader>
             <CardContent>
                 <div className="text-2xl font-bold">{usage}%</div>
-                <Progress value={usage} className="mt-2" />
+                {/* <Progress value={usage} className="mt-2" />  doesnt work currently*/}
                 <p className="text-xs text-muted-foreground mt-2">of monthly limit</p>
             </CardContent>
         </Card>
